@@ -1,8 +1,8 @@
 # lab6
 
 ## 1. Замена std::unique_ptr на std::shared_ptr
-   - Было: std::vector<std::unique_ptr<Contact>> contacts;
-   - Стало: std::vector<std::shared_ptr<Contact>> contacts;
+   - Было: `std::vector<std::unique_ptr<Contact>> contacts;`
+   - Стало: `std::vector<std::shared_ptr<Contact>> contacts;`
 
 ## 2. Добавлен отдельный вектор для групп
    - Добавлено: `std::vector<std::shared_ptr<GroupContact>> groups;`
@@ -19,37 +19,10 @@
    - Было: `static std::unique_ptr<Contact> create(QString type);`
    - Стало: `static std::shared_ptr<Contact> create(QString type);`
 
-## 6. В методе `addContact` добавлена обработка групп
-```cpp
-else if (type == "Group") {
-    auto group = std::dynamic_pointer_cast<GroupContact>(contact);
-    group->setData(values[0], values[1], values[2].toInt());
-    contacts.push_back(group);
-    groups.push_back(group);  // Добавлено!
-}
-```
+## 5. В методе `addContact` добавлена обработка групп
 
-## 7. **В методе `deleteContact` добавлено удаление из списка групп**
-```cpp
-// Если удаляем группу, удаляем её из списка групп
-if (c->getType() == "Group") {
-    auto it = std::find_if(groups.begin(), groups.end(),
-                           [c](auto& ptr) { return ptr.get() == c; });
-    if (it != groups.end()) {
-        groups.erase(it);
-    }
-}
+## 6. Тестовые данные теперь демонстрируют, что один контакт может быть в нескольких группах
 ```
-
-## 8. **В методе `loadFile` добавлена загрузка групп**
-```cpp
-if (c->getType() == "Group") {
-    groups.push_back(std::dynamic_pointer_cast<GroupContact>(c));
-}
-```
-
-## 9. **Тестовые данные теперь демонстрируют, что один контакт может быть в нескольких группах**
-```cpp
 auto friends = std::make_shared<GroupContact>("Друзья", "Школьные друзья", 2);
 friends->addMember(person1);
 friends->addMember(person2);
